@@ -31,10 +31,9 @@ def print_categories(ctx: click.Context, param: str, value: str) -> int | None:
     if not value or ctx.resilient_parsing:
         return
     click.echo("Available genres:", file=sys.stdout)
-    for category in CATEGORY_ID:
-        click.echo("\t" + category, file=sys.stdout)
+    for categ in CATEGORY_ID.keys():
+        click.echo(f"    {categ!r}", file=sys.stdout)
     ctx.exit()
-
 
 
 def _set_if_not_none(d: dict[str, Any], key: str, value: Any) -> None:

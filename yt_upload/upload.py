@@ -10,7 +10,7 @@ from typing import Any, Iterable
 
 from googleapiclient.discovery import Resource
 from googleapiclient.http import MediaFileUpload, HttpRequest, ResumableUploadError
-from tqdm import tqdm
+from tqdm import tqdm # TODO: swap for click.progressbar
 
 from .log import logger
 

@@ -9,6 +9,8 @@ from typing import Iterable, Any
 from oauth2client.client import Credentials, Storage, UnknownClientSecretsFlowError, OAuth2WebServerFlow
 from oauth2client.clientsecrets import _validate_clientsecrets, TYPE_WEB, TYPE_INSTALLED
 
+from .log import logger
+
 
 def _list_stored_passwords(root: str) -> list[str]:
     return glob("**/*.gpg", root_dir=root)
@@ -52,14 +54,20 @@ class PassStorage(Storage):
         Raises:
             IOError if the file is a symbolic link.
         """
-        credentials = None
-        content = get_pass_data(self._pass_key)
+        try:
+            content = get_pass_data(self._pass_key)
+        except ValueError as error:
+            logger.info(error.args)
+            logger.info("Creating new credential storage under '%s'", self._pass_key)
+            return None
 
         try:
             credentials = Credentials.new_from_json(content)
             credentials.set_store(self)
-        except ValueError:
-            pass
+        except ValueError as error:
+            logger.info(error.args)
+            logger.info("Couldn't retrieve information from '%s'", self._pass_key)
+            return None
 
         return credentials
 

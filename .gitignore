@@ -25,3 +25,8 @@ pip-delete-this-directory.txt
 
 .venv/
 
+# makepkg junk
+/pkg/
+/python-yt_upload-git-0.0.0a1-3-any.pkg.tar.xz
+/src/
+/youtube-upload/

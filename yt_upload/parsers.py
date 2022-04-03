@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import sys
+
 from datetime import datetime
 from typing import Any
 
@@ -23,6 +25,16 @@ def validate_category(ctx: click.Context, param: str, value: str) -> int | None:
         return CATEGORY_ID[value]
     except KeyError as error:
         raise ValueError(f"{param!r} must be one of: {list(CATEGORY_ID.keys())!r}") from error
+
+
+def print_categories(ctx: click.Context, param: str, value: str) -> int | None:
+    if not value or ctx.resilient_parsing:
+        return
+    click.echo("Available genres:", file=sys.stdout)
+    for category in CATEGORY_ID:
+        click.echo("\t" + category, file=sys.stdout)
+    ctx.exit()
+
 
 
 def _set_if_not_none(d: dict[str, Any], key: str, value: Any) -> None:

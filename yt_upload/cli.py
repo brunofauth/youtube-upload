@@ -7,7 +7,7 @@ import click
 
 from .auth import build_youtube_resource_from_files, build_youtube_resource_from_pass
 from .playlists import add_video_to_playlist
-from .parsers import parse_upload_metadata, validate_category, CATEGORY_ID
+from .parsers import parse_upload_metadata, validate_category, CATEGORY_ID, print_categories
 from .upload import upload
 from .__version__ import __version__
 
@@ -23,7 +23,8 @@ Choice = partial(click.Choice, case_sensitive=False)
 
 # Video Metadata
 @click.option('-t', "--title")
-@click.option('-g', "--genre", "category", type=Choice(list(CATEGORY_ID.keys())), callback=validate_category, default=None)
+@click.option('-g', "--genre", "category", callback=validate_category, default=None, help="video genre")
+@click.option("-G", "--list-genres", is_flag=True, is_eager=True, callback=print_categories, help="list available genres and exit")
 @click.option('-d', "--description", default=None)
 @click.option("-p", '--playlist', help="add video to <playlist>, creating it if non-existent", default=None)
 @click.option("-n", '--thumbnail', type=click.Path(exists=True, dir_okay=False, path_type=Path), help='.jpg or .png', default=None)

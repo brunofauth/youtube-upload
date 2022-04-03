@@ -27,5 +27,6 @@ build() {
 package() {
     cd "$_git_name"
     python setup.py install --skip-build --root="$pkgdir" --optimize=1
+    install -Dm644 "shared_files/fish_completion.fish" "$pkgdir/usr/share/fish/completions/$_name.fish"
 }
 

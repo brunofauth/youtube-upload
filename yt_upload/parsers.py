@@ -30,7 +30,7 @@ def validate_genre(ctx: click.Context, param: str, value: str) -> int | None:
 def print_genres(ctx: click.Context, param: str, value: str) -> int | None:
     if not value or ctx.resilient_parsing:
         return
-    click.echo("Available genres:", file=sys.stdout)
+    click.echo("Available genres:", file=sys.stderr)
     for categ in CATEGORY_ID.keys():
         click.echo(f"    {categ!r}", file=sys.stdout)
     ctx.exit()

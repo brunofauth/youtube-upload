@@ -8,7 +8,7 @@ HERE = Path(__file__).parent
 if __name__ == "__main__":
 
     data = {}
-    with open(HERE / "wcd/__version__.py", "r", encoding="utf-8") as f:
+    with open(HERE / "yt_upload" / "__version__.py", "r", encoding="utf-8") as f:
         exec(f.read(), data)
 
     with open("README.md", "r", encoding="utf-8") as f:
@@ -29,7 +29,7 @@ if __name__ == "__main__":
         packages=["yt_upload"],
         install_requires=["click>=8.1.2", "google-api-python-client>=2.42.0", "oauth2client>=4.1.3", "tqdm>=4.63.1"],
 
-        entry_points={"console_scripts": ["wcd=yt_upload.cli:cli_main"]},
+        entry_points={"console_scripts": ["yt_upload=yt_upload.cli:cli_main"]},
         # package_data={"": ["*.yml"]},
 
         url=data["__url__"],

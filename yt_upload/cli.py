@@ -25,7 +25,8 @@ date_option = partial(click.option, type=click.DateTime(), metavar="DATETIME", h
 # Video Metadata
 @click.option('-t', "--title", help="Defaults to the video's basename")
 @click.option('-g', "--genre", type=Choice(list(CATEGORY_ID.keys())), metavar="GENRE", callback=validate_genre, help="Video genre")
-@click.option("-G", "--list-genres", is_flag=True, is_eager=True, callback=print_genres, help="List available genres and exit")
+@click.option("-G", "--list-genres", is_flag=True, is_eager=True, callback=print_genres, help="List available genres and exit",
+        expose_value=False)
 @click.option('-d', "--description", help="Set the video's description")
 @click.option("-p", '--playlist', help="Add video to <playlist>, creating it if non-existent")
 @click.option("-n", '--thumbnail', type=PATH_PARAM_TYPE, help='.jpg or .png')
@@ -79,6 +80,8 @@ def main(
         if credentials_file is None:
             credentials_file = self_home / "credentials.json"
         youtube_api = build_youtube_resource_from_files(client_secrets_file, credentials_file)
+
+
 
     metadata = parse_upload_metadata(title=raw_metadata.pop("title") or video_to_upload.name, **raw_metadata)
     video_id = upload(youtube_api, video_to_upload, metadata, chunksize=chunksize)

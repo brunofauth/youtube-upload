@@ -18,7 +18,7 @@ CATEGORY_ID = {
     "Sci-Fi/Fantasy": 40, "Thriller": 41, "Shorts": 42, "Shows": 43, "Trailers": 44}
 
 
-def validate_category(ctx: click.Context, param: str, value: str) -> int | None:
+def validate_genre(ctx: click.Context, param: str, value: str) -> int | None:
     if value is None:
         return value
     try:
@@ -27,7 +27,7 @@ def validate_category(ctx: click.Context, param: str, value: str) -> int | None:
         raise ValueError(f"{param!r} must be one of: {list(CATEGORY_ID.keys())!r}") from error
 
 
-def print_categories(ctx: click.Context, param: str, value: str) -> int | None:
+def print_genres(ctx: click.Context, param: str, value: str) -> int | None:
     if not value or ctx.resilient_parsing:
         return
     click.echo("Available genres:", file=sys.stdout)
@@ -44,7 +44,7 @@ def _set_if_not_none(d: dict[str, Any], key: str, value: Any) -> None:
 def parse_upload_metadata(
     title: str,
     description: str | None=None,
-    category: int | None=None,
+    genre: int | None=None,
     tags: list[str] | None=None,
     language: str | None=None,
     audio_language: str | None=None, 
@@ -61,7 +61,7 @@ def parse_upload_metadata(
 ) -> dict[str, Any]:
     snippet = {"title": title}
     _set_if_not_none(snippet, "description",          description)
-    _set_if_not_none(snippet, "categoryId",           category)
+    _set_if_not_none(snippet, "categoryId",           genre)
     _set_if_not_none(snippet, "tags",                 tags)
     _set_if_not_none(snippet, "defaultLanguage",      language)
     _set_if_not_none(snippet, "defaultAudioLanguage", audio_language)

@@ -8,8 +8,6 @@ from getpass import getpass
 from pathlib import Path
 from typing import Callable
 
-import httplib2
-
 from oauth2client.client import OAuth2Credentials, Credentials, Flow, OOB_CALLBACK_URN, flow_from_clientsecrets
 from oauth2client.file import Storage
 from googleapiclient.discovery import Resource, build as build_resource
@@ -49,11 +47,5 @@ def build_youtube_resource(client_secrets: Path, credentials_file: Path) -> Reso
     if (credentials := _load_credentials(storage)) is None:
         flow = flow_from_clientsecrets(client_secrets, scope=YOUTUBE_UPLOAD_SCOPE)
         credentials = _fetch_credentials(storage, flow)
-
-    # http_client = httplib2.Http()
-    # http_client.redirect_codes = httplib.redirect_codes - {308}
-    # authorized_client = credentials.authorize(http_client)
-    # return build_resource(serviceName="youtube", version="v3", http=authorized_client)
-
     return build_resource(serviceName="youtube", version="v3", credentials=credentials)
 

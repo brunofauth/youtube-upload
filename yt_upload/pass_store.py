@@ -3,18 +3,15 @@ import subprocess as sp
 import json
 import os
 
+from glob import glob
 from typing import Iterable, Any
 
 from oauth2client.client import Credentials, Storage, UnknownClientSecretsFlowError, OAuth2WebServerFlow
 from oauth2client.clientsecrets import _validate_clientsecrets, TYPE_WEB, TYPE_INSTALLED
 
 
-def _iter_stored_passwords(root: str, exclude_dirs: list[str]) -> Iterable[str]:
-    for dirpath, dirnames, filenames in os.walk(top=root, topdown=True):
-        dirs_to_exclude = [i for i, dirname in enumerate(dirnames) if dirname in exclude_dirs]
-        for index in reversed(dirs_to_exclude):
-            dirnames.pop(index)
-        yield from (os.path.join(dirpath, filename)[len(root)+1:] for filename in filenames)
+def _list_stored_passwords(root: str) -> list[str]:
+    return glob("**/*.gpg", root_dir=root)
 
 
 def get_pass_data(key: str) -> str:
@@ -22,7 +19,7 @@ def get_pass_data(key: str) -> str:
     pw_store_dir = os.environ.get("PASSWORD_STORE_DIR", None)
     if pw_store_dir is None:
         raise OSError("'PASSWORD_STORE_DIR' environment variable isn't set")
-    if key + ".gpg" not in _iter_stored_passwords(pw_store_dir, exclude_dirs=[".git"]):
+    if key + ".gpg" not in _list_stored_passwords(pw_store_dir):
         raise ValueError(f"There's no password stored under the name {key!r}")
 
     process = sp.run(["pass", key], check=True, text=True, capture_output=True)

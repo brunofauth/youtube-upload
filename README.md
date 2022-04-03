@@ -5,31 +5,23 @@ Command-line script to upload videos to Youtube using theYoutube [APIv3](https:/
 
 Dependencies
 ============
-
-  * [Python 2.6/2.7/3.x](http://www.python.org).
-  * Packages: [google-api-python-client](https://developers.google.com/api-client-library/python), [progressbar2](https://pypi.python.org/pypi/progressbar2) (optional).
-
-Check if your operating system provides those packages (check also those [deb/rpm/mac files](https://github.com/qiuwei/youtube-upload/releases)), otherwise install them with `pip`:
+  * [Python 3.10](http://www.python.org) (maybe it works on lower versions, I haven't tested them though; and it definitely doesn't work with <=3.5).
+  * tqdm, google-api-python-client, oauth2client and click. They'll be automatically installed by makepkg/setuptools/pip, though
 
 ```
-$ sudo pip install --upgrade google-api-python-client oauth2client progressbar2
+pip install --user -r requirements.txt
+```
+or
+```
+python setup.py install
 ```
 
-Install
-=======
-
+Installing
+==========
 ```
-$ wget https://github.com/tokland/youtube-upload/archive/master.zip
-$ unzip master.zip
-$ cd youtube-upload-master
-$ sudo python setup.py install
-```
-
-Or run directly from sources:
-
-```
-$ cd youtube-upload-master
-$ PYTHONPATH=. python bin/youtube-upload ...
+git clone https://github.com/brunofauth/youtube-upload.git
+cd youtube-upload
+sudo python setup.py install
 ```
 
 Setup
@@ -49,68 +41,6 @@ The package used to include a default ```client_secrets.json``` file. It does no
 * Use this JSON as your credentials file: `--client-secrets=CLIENT_SECRETS` or copy it to `~/client_secrets.json`.
 
 *Note: ```client_secrets.json``` is a file you can download from the developer console, the credentials file is something auto generated after the first time the script is run and the google account sign in is followed, the file is stored at ```~/.youtube-upload-credentials.json```.*
-
-Examples
-========
-
-* Upload a video (a valid `~/.client_secrets.json` should exist, check the Setup section):
-
-```
-$ youtube-upload --title="A.S. Mutter" anne_sophie_mutter.flv
-pxzZ-fYjeYs
-```
-
-* Upload a video with extra metadata, with your own client secrets and credentials file, and to a playlist (if not found, it will be created):
-
-```
-$ youtube-upload \
-  --title="A.S. Mutter" \
-  --description="A.S. Mutter plays Beethoven" \
-  --category="Music" \
-  --tags="mutter, beethoven" \
-  --recording-date="2011-03-10T15:32:17.0Z" \
-  --default-language="en" \
-  --default-audio-language="en" \
-  --client-secrets="my_client_secrets.json" \
-  --credentials-file="my_credentials.json" \
-  --playlist="My favorite music" \
-  --embeddable=True|False \
-  anne_sophie_mutter.flv
-tx2Zb-145Yz
-```
-*Other extra medata available :* 
- ```
- --privacy (public | unlisted | private)  
- --publish-at (YYYY-MM-DDThh:mm:ss.sZ)  
- --location (latitude=VAL,longitude=VAL[,altitude=VAL])  
- --thumbnail (string)  
- ```
-
-* Upload a video using a browser GUI to authenticate:
-
-```
-$ youtube-upload --title="A.S. Mutter" --auth-browser anne_sophie_mutter.flv
-```
-
-* Split a video with _ffmpeg_
-
-If your video is too big or too long for Youtube limits, split it before uploading:
-
-```
-$ bash examples/split_video_for_youtube.sh video.avi
-video.part1.avi
-video.part2.avi
-video.part3.avi
-```
-* Use a HTTP proxy
-
-Set environment variables *http_proxy* and *https_proxy*:
-
-```
-$ export http_proxy=http://user:password@host:port
-$ export https_proxy=$http_proxy
-$ youtube-upload ....
-```
 
 Get available categories
 ========================
@@ -144,16 +74,3 @@ Alternatives
 
 * [shoogle](https://github.com/tokland/shoogle) can send requests to any Google API service, so it can be used not only to upload videos, but also to perform any operation regarding the Youtube API.
 
-* [youtubeuploader](https://github.com/porjo/youtubeuploader) uploads videos to Youtube from local disk or from the web. It also provides rate-limited uploads.
-
-More
-====
-
-* License: [GNU/GPLv3](http://www.gnu.org/licenses/gpl.html).
-
-Feedback
-========
-
-* [Donations](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=pyarnau%40gmail%2ecom&lc=US&item_name=youtube%2dupload&no_note=0&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHostedGuest).
-* If you find a bug, [open an issue](https://github.com/tokland/youtube-upload/issues).
-* If you want a new feature to be added, you'll have to send a pull request (or find a programmer to do it for you), currently I am not adding new features.

@@ -7,7 +7,7 @@ import click
 
 from .auth import build_youtube_resource_from_files, build_youtube_resource_from_pass
 from .playlists import add_video_to_playlist
-from .parsers import parse_upload_metadata, validate_category, CATEGORY_ID, print_categories
+from .parsers import parse_upload_metadata, validate_genre, CATEGORY_ID, print_genres
 from .upload import upload
 from .__version__ import __version__
 
@@ -15,6 +15,7 @@ from .__version__ import __version__
 WATCH_VIDEO_URL = "https://www.youtube.com/watch?v={id}"
 PATH_PARAM_TYPE = click.Path(exists=True, dir_okay=False, path_type=Path, resolve_path=True)
 Choice = partial(click.Choice, case_sensitive=False)
+date_option = partial(click.option, type=click.DateTime(), metavar="DATETIME", help="Formatted like '%Y-%m-%d %H:%M:%S'")
 
 
 @click.command()
@@ -22,31 +23,31 @@ Choice = partial(click.Choice, case_sensitive=False)
 @click.version_option(__version__)
 
 # Video Metadata
-@click.option('-t', "--title")
-@click.option('-g', "--genre", "category", callback=validate_category, default=None, help="video genre")
-@click.option("-G", "--list-genres", is_flag=True, is_eager=True, callback=print_categories, help="list available genres and exit")
-@click.option('-d', "--description", default=None)
-@click.option("-p", '--playlist', help="add video to <playlist>, creating it if non-existent", default=None)
-@click.option("-n", '--thumbnail', type=click.Path(exists=True, dir_okay=False, path_type=Path), help='.jpg or .png', default=None)
-@click.option("-T", "--tag", "tags", multiple=True, help="this option may be used several times", default=None)
-@click.option("-D", '--date-to-publish', type=click.DateTime(), default=None, help="formatted like ISO 8601")
-@click.option("-r", '--recording-date', type=click.DateTime(), default=None, help="formatted like ISO 8601")
-@click.option("-l", '--language', default=None, help="ISO 639-1: <en|fr|de|pt|...>")
-@click.option("-a", '--audio-language', default=None, help="ISO 639-1: <en|fr|de|pt|...>")
+@click.option('-t', "--title", help="Defaults to the video's basename")
+@click.option('-g', "--genre", type=Choice(list(CATEGORY_ID.keys())), metavar="GENRE", callback=validate_genre, help="Video genre")
+@click.option("-G", "--list-genres", is_flag=True, is_eager=True, callback=print_genres, help="List available genres and exit")
+@click.option('-d', "--description", help="Set the video's description")
+@click.option("-p", '--playlist', help="Add video to <playlist>, creating it if non-existent")
+@click.option("-n", '--thumbnail', type=PATH_PARAM_TYPE, help='.jpg or .png')
+@click.option("-T", "--tag", "tags", multiple=True, help="this option may be used several times")
+@date_option("-D", '--date-to-publish')
+@date_option("-r", '--recording-date')
+@click.option("-l", '--language', help="ISO 639-1: <en|fr|de|pt|...>")
+@click.option("-a", '--audio-language', help="ISO 639-1: <en|fr|de|pt|...>")
 @click.option("-L", '--license', type=Choice(['youtube', 'creativeCommon']), default='youtube')
-@click.option('--location-latitude', default=None, type=float)
-@click.option('--location-longitude', default=None, type=float)
-@click.option('--location-altitude', default=None, type=float)
+@click.option('--location-latitude', type=float)
+@click.option('--location-longitude', type=float)
+@click.option('--location-altitude', type=float)
 
 # Other Video Options
-@click.option("-V", '--visibility', type=click.Choice(["public", "unlisted", "private"], case_sensitive=False), default="public")
+@click.option("-V", '--visibility', type=Choice(["public", "unlisted", "private"]), default="public")
 @click.option("-e", '--embeddable', type=bool, default=False, help='make video is embeddable')
 
 # Authentication
-@click.option("-s", '--client-secrets-file', type=PATH_PARAM_TYPE, help='Secrets JSON file', default=None)
-@click.option("-c", '--credentials-file', type=PATH_PARAM_TYPE, help='Credentials JSON file', default=None)
-@click.option("-S", '--client-secrets-pass', help="client secrets entry in 'pass'", default=None)
-@click.option("-C", '--credentials-pass', help="credentials entry in 'pass'", default=None)
+@click.option("-s", '--client-secrets-file', type=PATH_PARAM_TYPE, help='Secrets JSON file')
+@click.option("-c", '--credentials-file', type=PATH_PARAM_TYPE, help='Credentials JSON file')
+@click.option("-S", '--client-secrets-pass', help="client secrets entry in 'pass'")
+@click.option("-C", '--credentials-pass', help="credentials entry in 'pass'")
 
 # Miscellaneous
 @click.option('--chunksize', type=int, default=1024*1024*8, help='Progress bar step, in bytes')

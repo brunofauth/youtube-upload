@@ -21,7 +21,7 @@ def validate_category(ctx: click.Context, param: str, value: str) -> int | None:
         return value
     try:
         return CATEGORY_ID[value]
-    except KeyErro as errorr:
+    except KeyError as error:
         raise ValueError(f"{param!r} must be one of: {list(CATEGORY_ID.keys())!r}") from error
 
 

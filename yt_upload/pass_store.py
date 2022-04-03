@@ -119,12 +119,10 @@ def flow_from_clientsecrets_json(secrets_json: dict[str, Any], scope):
         'redirect_uri': None,
         'auth_uri': client_info['auth_uri'],
         'token_uri': client_info['token_uri'],
-        'login_hint': None,
-    }
-    revoke_uri = client_info.get('revoke_uri')
-    for param in ('revoke_uri', 'device_uri', 'pkce', 'code_verifier', 'prompt'):
-        if locals()[param] is not None:
-            constructor_kwargs[param] = locals()[param]
+        'login_hint': None}
+
+    if (revoke_uri := client_info.get('revoke_uri')) is not None:
+        constructor_kwargs["revoke_uri"] = revoke_uri
 
     return OAuth2WebServerFlow(
         client_info['client_id'], client_info['client_secret'],

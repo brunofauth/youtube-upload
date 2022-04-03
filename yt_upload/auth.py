@@ -26,6 +26,7 @@ YOUTUBE_UPLOAD_SCOPE = [
 def get_oauth2_token(url: str) -> str:
     webbrowser.open_new_tab(url)
     with redirect_stdout(sys.stderr):
+        print("Go to {url!r} on your browser, authenticate and copy the token they'll supply you with.")
         return getpass("Paste here the OAuth2 token (won't be echoed): ")
 
 

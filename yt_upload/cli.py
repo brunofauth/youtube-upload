@@ -9,6 +9,7 @@ from .auth import build_youtube_resource_from_files, build_youtube_resource_from
 from .playlists import add_video_to_playlist
 from .parsers import parse_upload_metadata, validate_category, CATEGORY_ID
 from .upload import upload
+from .__version__ import __version__
 
 
 WATCH_VIDEO_URL = "https://www.youtube.com/watch?v={id}"
@@ -18,6 +19,7 @@ Choice = partial(click.Choice, case_sensitive=False)
 
 @click.command()
 @click.argument("video-to-upload", type=click.Path(exists=True, dir_okay=False, path_type=Path))
+@click.version_option(__version__)
 
 # Video Metadata
 @click.option('-t', "--title")

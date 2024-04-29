@@ -3,8 +3,8 @@
 _name=yt_upload
 _git_name=youtube-upload
 pkgname="python-$_name-git"
-pkgver='0.0.0a1'
-pkgrel=3
+pkgver='0.0.0a2'
+pkgrel=1
 pkgdesc="Upload videos to youtube, from the command line"
 
 arch=('any')
